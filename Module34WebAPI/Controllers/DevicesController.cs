@@ -76,4 +76,14 @@ public class DevicesController : ControllerBase
 
         return StatusCode(200, $"Device {device.Name} with serial {device.SerialNumber} in {device.Room.Name} updated");
     }
+
+    [HttpDelete]
+    [Route("{id}")]
+    public async Task<IActionResult> Delete([FromRoute] Guid id) // добавлен метод для удаления устройства по id
+    {
+        var deletableDevice = await _deviceRepository.GetDeviceById(id);
+        
+        await _deviceRepository.DeleteDevice(deletableDevice); // в репозитории устройств уже был метод для удаления, ой, как удобно
+        return StatusCode(200, $"Device {deletableDevice.Name} {deletableDevice.Id} were removed from {deletableDevice.Location}");
+    }
 }
